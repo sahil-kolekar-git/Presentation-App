@@ -1,16 +1,22 @@
 package com.ty.presentationapp.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ty.presentationapp.dto.UserDTO;
 import com.ty.presentationapp.dto.UserLoginDTO;
+import com.ty.presentationapp.dto.UserResponseDTO;
+import com.ty.presentationapp.enums.Status;
 import com.ty.presentationapp.service.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/user")
@@ -38,6 +44,23 @@ public class UserController {
 			return ResponseEntity.ok("Logged In...");
 		return new ResponseEntity<String>("Wrong Credentials", HttpStatus.BAD_REQUEST);
 
+	}
+
+	@GetMapping("/get/{id}")
+	public ResponseEntity<?> getDetails(@PathVariable Integer id) {
+
+		UserResponseDTO userRespDTO = userService.getUserDetails(id);
+
+		if (userRespDTO.getStatus().equals(Status.ACTIVE))
+			return new ResponseEntity<UserResponseDTO>(userRespDTO, HttpStatus.OK);
+		return new ResponseEntity<String>("User is not active", HttpStatus.BAD_REQUEST);
+	}
+
+	@GetMapping("/getall/{id}")
+	public ResponseEntity<List<UserResponseDTO>> getMethodName(@PathVariable Integer id) {
+		List<UserResponseDTO> users = userService.getAll(id);
+
+		return new ResponseEntity<List<UserResponseDTO>>(users, HttpStatus.OK);
 	}
 
 }

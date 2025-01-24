@@ -17,4 +17,10 @@ public class AppExceptionHandler {
 	public ResponseEntity<String> catchUserNotFoundException(UserNotFoundException exception) {
 		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
 	}
+
+	@ExceptionHandler(NotAdminException.class)
+	public ResponseEntity<String> catchNotAdminException(NotAdminException exception) {
+		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+
 }

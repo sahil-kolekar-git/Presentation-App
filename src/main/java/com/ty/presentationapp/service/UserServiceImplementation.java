@@ -1,17 +1,22 @@
 package com.ty.presentationapp.service;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
+import org.apache.catalina.realm.UserDatabaseRealm;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.ty.presentationapp.dto.UserDTO;
 import com.ty.presentationapp.dto.UserLoginDTO;
+import com.ty.presentationapp.dto.UserResponseDTO;
 import com.ty.presentationapp.entity.User;
+import com.ty.presentationapp.enums.Role;
 import com.ty.presentationapp.exception.DuplicateEmailException;
+import com.ty.presentationapp.exception.NotAdminException;
 import com.ty.presentationapp.exception.UserNotFoundException;
 import com.ty.presentationapp.repository.UserRepository;
 
@@ -47,4 +52,41 @@ public class UserServiceImplementation implements UserService {
 			return true;
 		return false;
 	}
+
+	@Override
+	public UserResponseDTO getUserDetails(Integer id) {
+
+		User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not registred"));
+
+		UserResponseDTO dto = new UserResponseDTO();
+		BeanUtils.copyProperties(user, dto);
+
+		return dto;
+	}
+
+	@Override
+	public List<UserResponseDTO> getAll(Integer id) {
+
+		User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not registred"));
+
+		if (user.getRole().equals(Role.ADMIN)) {
+
+			List<User> users = userRepository.findAll();
+			List<UserResponseDTO> list = new LinkedList<>();
+
+			for (User u : users) {
+				UserResponseDTO u1 = new UserResponseDTO();
+				BeanUtils.copyProperties(u, u1);
+				list.add(u1);
+			}
+
+			return list;
+		}
+
+		throw new NotAdminException("Not an admin");
+	}
+	
+	
+	
+
 }
