@@ -17,4 +17,8 @@ public interface UserService {
 
 	List<UserResponseDTO> getAll(Integer id);
 
+	UserResponseDTO updateStatus(Integer id, Integer uid);
+
+	boolean delete(Integer id);
+
 }

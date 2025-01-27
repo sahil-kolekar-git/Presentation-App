@@ -23,4 +23,9 @@ public class AppExceptionHandler {
 		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<String> catchException(Exception exception) {
+		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+
 }

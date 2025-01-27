@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,7 @@ import com.ty.presentationapp.dto.UserLoginDTO;
 import com.ty.presentationapp.dto.UserResponseDTO;
 import com.ty.presentationapp.enums.Status;
 import com.ty.presentationapp.service.UserService;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/user")
@@ -61,6 +64,22 @@ public class UserController {
 		List<UserResponseDTO> users = userService.getAll(id);
 
 		return new ResponseEntity<List<UserResponseDTO>>(users, HttpStatus.OK);
+	}
+
+	@PutMapping("/updatestatus/{id}/{uid}")
+	public ResponseEntity<UserResponseDTO> putMethodName(@PathVariable Integer id, @PathVariable Integer uid) {
+
+		UserResponseDTO user = userService.updateStatus(id, uid);
+		return ResponseEntity.ok(user);
+	}
+
+	@DeleteMapping("delete/{id}")
+	public ResponseEntity<String> deleteUser(@PathVariable Integer id) {
+		boolean deleted = userService.delete(id);
+		if (deleted)
+			return new ResponseEntity<>("User deleted", HttpStatus.OK);
+		return new ResponseEntity<String>("Something went wrong", HttpStatus.BAD_REQUEST);
+
 	}
 
 }

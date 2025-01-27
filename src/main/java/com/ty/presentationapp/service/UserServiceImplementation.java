@@ -15,6 +15,7 @@ import com.ty.presentationapp.dto.UserLoginDTO;
 import com.ty.presentationapp.dto.UserResponseDTO;
 import com.ty.presentationapp.entity.User;
 import com.ty.presentationapp.enums.Role;
+import com.ty.presentationapp.enums.Status;
 import com.ty.presentationapp.exception.DuplicateEmailException;
 import com.ty.presentationapp.exception.NotAdminException;
 import com.ty.presentationapp.exception.UserNotFoundException;
@@ -85,8 +86,39 @@ public class UserServiceImplementation implements UserService {
 
 		throw new NotAdminException("Not an admin");
 	}
-	
-	
-	
+
+	@Override
+	public UserResponseDTO updateStatus(Integer id, Integer uid) {
+
+		User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not registred"));
+
+		if (user.getRole().equals(Role.ADMIN)) {
+			User dbuser = userRepository.findById(uid)
+					.orElseThrow(() -> new UserNotFoundException("User not registred"));
+			if (dbuser.getStatus().equals(Status.ACTIVE))
+				dbuser.setStatus(Status.INACTIVE);
+			else
+				dbuser.setStatus(Status.ACTIVE);
+
+			User updated = userRepository.save(dbuser);
+
+			UserResponseDTO dto = new UserResponseDTO();
+			BeanUtils.copyProperties(updated, dto);
+
+			return dto;
+
+		} else {
+			throw new NotAdminException("Not an Admin");
+		}
+	}
+
+	@Override
+	public boolean delete(Integer id) {
+
+		 userRepository.delete(
+				userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not registred")));
+		 
+		 return true;
+	}
 
 }
