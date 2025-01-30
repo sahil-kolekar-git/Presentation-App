@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ty.presentationapp.enums.PresentationStatus;
 
 import jakarta.persistence.Column;
@@ -33,12 +34,13 @@ public class Presentation {
 	private String topic;
 
 	@Enumerated(EnumType.STRING)
-	private PresentationStatus presentationstatus;
+	private PresentationStatus presentationstatus = PresentationStatus.ASSIGNED;
 
 	private Double userTotalScore;
 
 	@ManyToOne
 	@JoinColumn
+	@JsonIgnore
 	private User user;
 
 	@CreationTimestamp

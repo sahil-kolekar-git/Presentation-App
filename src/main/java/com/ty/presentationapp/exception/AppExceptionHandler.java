@@ -28,4 +28,14 @@ public class AppExceptionHandler {
 		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 
+	@ExceptionHandler(InvailidOperationException.class)
+	public ResponseEntity<String> catchInvailidOperationException(InvailidOperationException exception) {
+		return new ResponseEntity<String>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(PresentationNotFoundException.class)
+	public ResponseEntity<String> catchPresentationNotFoundException(PresentationNotFoundException exception) {
+		return new ResponseEntity<String>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+
 }
