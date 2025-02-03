@@ -1,5 +1,6 @@
 package com.ty.presentationapp.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.catalina.authenticator.DigestAuthenticator;
@@ -18,6 +19,8 @@ import com.ty.presentationapp.exception.PresentationNotFoundException;
 import com.ty.presentationapp.exception.UserNotFoundException;
 import com.ty.presentationapp.repository.PresentationRepository;
 import com.ty.presentationapp.repository.UserRepository;
+
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 
 @Service
 public class PresentationServiceImplementation implements PresentationService {
@@ -66,4 +69,30 @@ public class PresentationServiceImplementation implements PresentationService {
 				.orElseThrow(() -> new PresentationNotFoundException("Presentation not assgined"));
 		return pres;
 	}
+
+	@Override
+	public List<Presentation> getAllPresentations(Integer id) {
+		User user = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Student not found"));
+
+		List<Presentation> presentation = user.getPresentation();
+		return presentation;
+	}
+
+	@Override
+	public List<Presentation> updateScore(Integer id) {
+
+		User user = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Student not found"));
+		List<Presentation> presentation = user.getPresentation();
+
+		Double total = 0.0;
+		for (Presentation pre : presentation) {
+			total += pre.getUserTotalScore();
+		}
+
+		user.setUserTotalScore(total);
+		repository.save(user);
+		return presentation;
+	}
+	
+	
 }

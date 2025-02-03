@@ -38,4 +38,9 @@ public class AppExceptionHandler {
 		return new ResponseEntity<String>(exception.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 
+	@ExceptionHandler(RatingNotFoundException.class)
+	public ResponseEntity<String> catchRatingNotFoundException(RatingNotFoundException exception) {
+		return new ResponseEntity<String>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+
 }

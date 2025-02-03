@@ -1,5 +1,7 @@
 package com.ty.presentationapp.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +52,21 @@ public class PresentationController {
 
 		Presentation pres = presentationService.getPresentationById(id);
 		return new ResponseEntity<Presentation>(pres, HttpStatus.OK);
+	}
+
+	@GetMapping("/getall/{id}")
+	public ResponseEntity<List<Presentation>> getMethodName(@PathVariable Integer id) {
+
+		List<Presentation> list = presentationService.getAllPresentations(id);
+
+		return new ResponseEntity<List<Presentation>>(list, HttpStatus.OK);
+	}
+
+	@PostMapping("/save")
+	public ResponseEntity<List<Presentation>> updateScore(@RequestParam Integer id) {
+
+		List<Presentation> list = presentationService.updateScore(id);
+		return new ResponseEntity<List<Presentation>>(list, HttpStatus.OK);
 	}
 
 }
